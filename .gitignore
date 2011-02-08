@@ -1,4 +1,5 @@
 /.idea
 *.iml
 /project/boot
-/target
+target/
+/lib_managed
