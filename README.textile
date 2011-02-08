@@ -1,3 +1,11 @@
 h1. Geeknight
 
 Repo for leking med Lift på geeknight :)
+
+h2. Komme i gang
+
+Installer Simple Build Tool fra [http://code.google.com/p/simple-build-tool/]
+{{git clone git://github.com/ovstetun/geek.git}}
+{{sbt}}
+{{update}}
+{{jetty-run}}
