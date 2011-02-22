@@ -5,13 +5,13 @@ package bootstrap.liftweb
 import net.liftweb._
 import http.{LiftRules, NotFoundAsTemplate, ParsePath}
 import sitemap.{SiteMap, Menu, Loc}
+import sitemap.Loc._
 import util.{ NamedPF }
-import _root_.net.liftweb.sitemap.Loc._
-import net.liftweb._
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
 import http.{S}
+
 import no.mesan.geek.model._
 
 
