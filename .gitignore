@@ -3,3 +3,5 @@
 /project/boot
 target/
 /lib_managed
+/out
+*.db
