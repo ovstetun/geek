@@ -57,7 +57,7 @@ class Boot {
     LiftRules.ajaxEnd   = Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
     // Use HTML5
-//    LiftRules.htmlProperties.default.set((r: Req) =>  new Html5Properties(r.userAgent))
+    LiftRules.htmlProperties.default.set((r: Req) =>  new Html5Properties(r.userAgent))
 
     // What is the function to test if a user is logged in?
     LiftRules.loggedInTest = Full(() => User.loggedIn_?)
