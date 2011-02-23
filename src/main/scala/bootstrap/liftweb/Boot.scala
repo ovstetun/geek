@@ -40,6 +40,7 @@ class Boot {
     // build sitemap
     def sitemap() = List(
       Menu("Home") / "index",
+      Menu("Chat") / "chat",
       Menu("Static") / "static" / **
     ) ::: User.menus
 
