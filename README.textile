@@ -9,3 +9,4 @@ Installer Simple Build Tool fra [http://code.google.com/p/simple-build-tool/]
 {{sbt}}
 {{update}}
 {{jetty-run}}
+
