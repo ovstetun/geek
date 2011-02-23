@@ -3,34 +3,17 @@
 package no.mesan.geek {
 
 import java.io.File
-import junit.framework._
-import Assert._
 import scala.xml.XML
 import net.liftweb._
 import util._
 import common._
-
-object AppTest {
-  def suite: Test = {
-    val suite = new TestSuite(classOf[AppTest])
-    suite
-  }
-
-  def main(args : Array[String]) {
-    _root_.junit.textui.TestRunner.run(suite)
-  }
-}
+import org.scalatest.FunSuite
+import org.scalatest.matchers.ShouldMatchers
 
 /**
  * Unit test for simple App.
  */
-class AppTest extends TestCase("app") {
-
-  /**
-   * Rigourous Tests :-)
-   */
-  def testOK() = assertTrue(true)
-  // def testKO() = assertTrue(false);
+class AppTest extends FunSuite with ShouldMatchers {
 
   /**
    * Tests to make sure the project's XML files are well-formed.
@@ -38,7 +21,7 @@ class AppTest extends TestCase("app") {
    * Finds every *.html and *.xml file in src/main/webapp (and its
    * subdirectories) and tests to make sure they are well-formed.
    */
-  def testXml() = {
+  test("All XML should be well formed") {
     var failed: List[File] = Nil
 
     def handledXml(file: String) =
