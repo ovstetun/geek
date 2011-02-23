@@ -3,15 +3,13 @@
 package bootstrap.liftweb
 
 import net.liftweb._
-import http.{LiftRules, NotFoundAsTemplate, ParsePath}
-import sitemap.{SiteMap, Menu, Loc}
+import http._
 import sitemap.Loc._
+import sitemap.{**, SiteMap, Menu, Loc}
 import util.{ NamedPF }
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
 import common.{Full}
-import http.{S}
-
 import no.mesan.geek.model._
 
 
@@ -40,30 +38,27 @@ class Boot {
     LiftRules.addToPackages("no.mesan.geek")
 
     // build sitemap
-    val entries = List(Menu("Home") / "index") :::
-                  List(Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-                       "Static Content"))) :::
-                  // the User management menu items
-                  User.sitemap :::
-                  Nil
-    
+    def sitemap() = List(
+      Menu("Home") / "index",
+      Menu("Static") / "static" / **
+    ) ::: User.menus
+
     LiftRules.uriNotFound.prepend(NamedPF("404handler"){
       case (req,failure) => NotFoundAsTemplate(
         ParsePath(List("exceptions","404"),"html",false,false))
     })
     
-    LiftRules.setSiteMap(SiteMap(entries:_*))
+    LiftRules.setSiteMapFunc(() => SiteMap(sitemap : _*))
     
     // set character encoding
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
     
-    //Show the spinny image when an Ajax call starts
-    LiftRules.ajaxStart =
-      Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
+    LiftRules.ajaxStart = Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
+    LiftRules.ajaxEnd   = Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
-    // Make the spinny image go away when it ends
-    LiftRules.ajaxEnd =
-      Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
+    // Use HTML5
+//    LiftRules.htmlProperties.default.set((r: Req) =>  new Html5Properties(r.userAgent))
+
     // What is the function to test if a user is logged in?
     LiftRules.loggedInTest = Full(() => User.loggedIn_?)
 
