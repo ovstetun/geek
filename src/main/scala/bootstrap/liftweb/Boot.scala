@@ -3,15 +3,15 @@
 package bootstrap.liftweb
 
 import net.liftweb._
+import common.{Empty, Full}
 import http._
 import sitemap.Loc._
 import sitemap.{**, SiteMap, Menu, Loc}
 import util.{ NamedPF }
 import mapper.{Schemifier, DB, StandardDBVendor, DefaultConnectionIdentifier}
 import util.{Props}
-import common.{Full}
 import no.mesan.geek.model._
-
+import no.mesan.geek.snippet._
 
 class Boot {
   def boot {
@@ -38,22 +38,32 @@ class Boot {
     LiftRules.addToPackages("no.mesan.geek")
 
     // build sitemap
-    def sitemap() = List(
-      Menu("Home") / "index",
+    def sitemap() = SiteMap (
+      Menu("Home") / "index" submenus (
+        Menu("test") / "lala"
+      ),
       Menu("Chat") / "chat",
-      Menu("Static") / "static" / **
-    ) ::: User.menus
+      Menu("Recurse") / "recurse" / "one" submenus (
+        Menu.param[Which]("Recurse", "Recurse",
+                          {case "one" => Full(First())
+                           case "two" => Full(Second())
+                           case "both" => Full(Both())
+                           case _ => Empty},
+                          w => w.toString) / "recurse"
+      ),
+      Menu("Static") / "static" / ** >> User.AddUserMenusAfter
+    )
 
-    LiftRules.uriNotFound.prepend(NamedPF("404handler"){
-      case (req,failure) => NotFoundAsTemplate(
+    LiftRules.uriNotFound.prepend(NamedPF("404handler") {
+      case (req, failure) => NotFoundAsTemplate(
         ParsePath(List("exceptions","404"),"html",false,false))
     })
-    
-    LiftRules.setSiteMapFunc(() => SiteMap(sitemap : _*))
-    
+
+    LiftRules.setSiteMapFunc(() => User.sitemapMutator(sitemap()))
+
     // set character encoding
     LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
-    
+
     LiftRules.ajaxStart = Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
     LiftRules.ajaxEnd   = Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
 
@@ -65,6 +75,5 @@ class Boot {
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
-    
   }
 }
