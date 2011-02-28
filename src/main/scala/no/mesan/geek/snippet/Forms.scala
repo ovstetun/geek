@@ -94,3 +94,14 @@ object ReqVar {
     }
   }
 }
+
+object ScreenExample extends LiftScreen {
+
+  val name = field("name", "")
+  val age = field("age", 0, minVal(13, "Age is to low"))
+
+  protected def finish() = {
+    S.notice("age: " + age)
+    S.notice("name: " + name)
+  }
+}
