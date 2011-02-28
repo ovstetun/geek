@@ -2,6 +2,7 @@ package no.mesan.geek
 package snippet
 
 import net.liftweb._
+import common.Full
 import http._
 import util.Helpers._
 import scala.xml.NodeSeq
@@ -10,7 +11,7 @@ import scala.xml.NodeSeq
  * A snippet that binds behavior, functions,
  * to HTML elements
  */
-class OnSubmit {
+object OnSubmit {
   def render = {
     // define some variables to put our values into
     var name = ""
@@ -37,5 +38,32 @@ class OnSubmit {
     "name=age" #> SHtml.onSubmit(s => asInt(s).foreach(age = _)) &
     // when the form is submitted, process the variable
     "type=submit" #> SHtml.onSubmitUnit(process)
+  }
+}
+
+class Stateful extends StatefulSnippet {
+  private var name = ""
+  private var age = "0"
+  private val whence = S.referer openOr "/"
+
+  def dispatch = {
+    case "render" => render
+  }
+
+  def render =
+    "name=name" #> SHtml.text(name, name = _, "id" -> "the_name") &
+    "name=age" #> SHtml.text(age, age = _) &
+    "type=submit" #> SHtml.onSubmitUnit(process)
+
+  private def process() = {
+    asInt(age) match {
+      case Full(a) if a < 13 => S.error("Too young!")
+      case Full(a) => {
+        S.notice("age: " + a)
+        S.notice("name: " + name)
+        S.redirectTo(whence)
+      }
+      case _ => S.error("Age must be a number...!")
+    }
   }
 }
