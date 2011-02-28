@@ -39,9 +39,7 @@ class Boot {
 
     // build sitemap
     def sitemap() = SiteMap (
-      Menu("Home") / "index" submenus (
-        Menu("test") / "lala"
-      ),
+      Menu("Home") / "index",
       Menu("Chat") / "chat",
       Menu("Recurse") / "recurse" / "one" submenus (
         Menu.param[Which]("Recurse", "Recurse",
