@@ -67,3 +67,30 @@ class Stateful extends StatefulSnippet {
     }
   }
 }
+
+object ReqVar {
+
+  object name extends RequestVar("")
+  object age extends RequestVar("0")
+  object whence extends RequestVar(S.referer openOr "/")
+
+  def render = {
+    val w = whence.is
+
+    "name=name" #> SHtml.textElem(name) &
+    "name=age" #> SHtml.textElem(age) &
+    "type=submit" #> SHtml.onSubmitUnit(process)
+  }
+
+  private def process() = {
+    asInt(age.is) match {
+      case Full(a) if a < 13 => S.error("Too young!")
+      case Full(a) => {
+        S.notice("age: " + a)
+        S.notice("name: " + name)
+        S.redirectTo(whence)
+      }
+      case _ => S.error("Age must be a number...!")
+    }
+  }
+}
