@@ -105,3 +105,4 @@ object ScreenExample extends LiftScreen {
     S.notice("name: " + name)
   }
 }
+
