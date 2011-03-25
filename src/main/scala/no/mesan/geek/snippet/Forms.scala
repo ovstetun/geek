@@ -33,7 +33,7 @@ object OnSubmit {
     // associate each of the form elements
     // with a function... behavior to perform when the
     // for element is submitted
-    "name=name" #> SHtml.onSubmit(name = _) & // set the name
+    "name=name" #> SHtml.onSubmit(s => (name = s)) & // set the name
     // set the age variable if we can convert to an Int
     "name=age" #> SHtml.onSubmit(s => asInt(s).foreach(age = _)) &
     // when the form is submitted, process the variable

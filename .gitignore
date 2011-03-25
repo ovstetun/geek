@@ -5,3 +5,4 @@ target/
 /lib_managed
 /out
 *.db
+.DS_Store
